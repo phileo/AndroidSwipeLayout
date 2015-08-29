@@ -5,14 +5,14 @@ android {
     buildToolsVersion project.ANDROID_BUILD_TOOLS_VERSION
 
     defaultConfig {
-        minSdkVersion 8
+        minSdkVersion Integer.parseInt(project.ANDROID_BUILD_MIN_SDK_VERSION)
         targetSdkVersion Integer.parseInt(project.ANDROID_BUILD_TARGET_SDK_VERSION)
     }
 }
 
 dependencies {
-    compile 'com.android.support:recyclerview-v7:21.0.0'
-    compile 'com.android.support:support-v4:22.1.1'
+    compile rootProject.ext.libraries.recyclerViewLib
+    compile 'com.android.support:support-v4:22.2.1'
 }
 apply from: './gradle-mvn-push.gradle'
 

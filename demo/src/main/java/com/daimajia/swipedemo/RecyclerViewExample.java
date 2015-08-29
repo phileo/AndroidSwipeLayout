@@ -10,10 +10,13 @@ import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.View;
+import android.widget.Toast;
 
 import com.daimajia.swipe.util.Attributes;
 import com.daimajia.swipedemo.adapter.RecyclerViewAdapter;
 import com.daimajia.swipedemo.adapter.util.DividerItemDecoration;
+import com.daimajia.swipedemo.adapter.util.RecyclerItemClickListener;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -21,7 +24,7 @@ import java.util.Arrays;
 import jp.wasabeef.recyclerview.animators.FadeInLeftAnimator;
 
 public class RecyclerViewExample extends Activity {
-
+    private static final String TAG = RecyclerViewExample.class.getSimpleName();
     /**
      * RecyclerView: The new recycler view replaces the list view. Its more modular and therefore we
      * must implement some of the functionality ourselves and attach it to our recyclerview.
@@ -44,7 +47,7 @@ public class RecyclerViewExample extends Activity {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB) {
             ActionBar actionBar = getActionBar();
             if (actionBar != null) {
-                actionBar.setTitle("RecyclerView");
+                actionBar.setTitle(TAG);
             }
         }
 
@@ -54,6 +57,18 @@ public class RecyclerViewExample extends Activity {
         // Item Decorator:
         recyclerView.addItemDecoration(new DividerItemDecoration(getResources().getDrawable(R.drawable.divider)));
         recyclerView.setItemAnimator(new FadeInLeftAnimator());
+        recyclerView.addOnItemTouchListener(new RecyclerItemClickListener(recyclerView,
+                                                                          new RecyclerItemClickListener.OnItemClickListener() {
+            @Override
+            public void onItemClick(View view, int position) {
+                Log.i(TAG, "onItemClick: " + position);
+            }
+
+            @Override
+            public void onItemLongClick(View view, int position) {
+                Toast.makeText(view.getContext(), "onItemLongClick: " + position, Toast.LENGTH_LONG).show();
+            }
+        }));
 
         // Adapter:
         String[] adapterData = new String[]{"Alabama", "Alaska", "Arizona", "Arkansas", "California", "Colorado", "Connecticut", "Delaware", "Florida", "Georgia", "Hawaii", "Idaho", "Illinois", "Indiana", "Iowa", "Kansas", "Kentucky", "Louisiana", "Maine", "Maryland", "Massachusetts", "Michigan", "Minnesota", "Mississippi", "Missouri", "Montana", "Nebraska", "Nevada", "New Hampshire", "New Jersey", "New Mexico", "New York", "North Carolina", "North Dakota", "Ohio", "Oklahoma", "Oregon", "Pennsylvania", "Rhode Island", "South Carolina", "South Dakota", "Tennessee", "Texas", "Utah", "Vermont", "Virginia", "Washington", "West Virginia", "Wisconsin", "Wyoming"};
@@ -63,7 +78,7 @@ public class RecyclerViewExample extends Activity {
         recyclerView.setAdapter(mAdapter);
 
         /* Listeners */
-        recyclerView.setOnScrollListener(onScrollListener);
+        recyclerView.addOnScrollListener(onScrollListener);
     }
 
     /**
@@ -73,7 +88,7 @@ public class RecyclerViewExample extends Activity {
         @Override
         public void onScrollStateChanged(RecyclerView recyclerView, int newState) {
             super.onScrollStateChanged(recyclerView, newState);
-            Log.e("ListView", "onScrollStateChanged");
+            Log.i(TAG, "onScrollStateChanged");
         }
 
         @Override
