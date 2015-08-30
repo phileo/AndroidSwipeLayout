@@ -173,9 +173,10 @@ public class SwipeItemMangerImpl implements SwipeItemMangerInterface {
 
     }
 
-    class SwipeMemory extends SimpleSwipeListener {
+    private class SwipeMemory extends SimpleSwipeListener {
 
         private int position;
+        private int mOpenTimes = 0;
 
         SwipeMemory(int position) {
             this.position = position;
@@ -185,8 +186,12 @@ public class SwipeItemMangerImpl implements SwipeItemMangerInterface {
         public void onClose(SwipeLayout layout) {
             if (mode == Attributes.Mode.Multiple) {
                 mOpenPositions.remove(position);
-            } else if(position == mOpenPosition) {
-                mOpenPosition = INVALID_POSITION;
+            } else  {
+                mOpenTimes--;
+                if ((mOpenTimes <= 0) || (position == mOpenPosition)) {
+                    mOpenPosition = INVALID_POSITION;
+                    mOpenTimes = 0;
+                }
             }
         }
 
@@ -199,9 +204,10 @@ public class SwipeItemMangerImpl implements SwipeItemMangerInterface {
 
         @Override
         public void onOpen(SwipeLayout layout) {
-            if (mode == Attributes.Mode.Multiple)
+            if (mode == Attributes.Mode.Multiple) {
                 mOpenPositions.add(position);
-            else {
+            } else {
+                mOpenTimes++;
                 closeAllExcept(layout);
                 mOpenPosition = position;
             }
